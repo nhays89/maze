@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Maze Game</title>
+	<link rel="stylesheet" href="style.css">
+	<!--
+		Inspired by Simple 2D JavaScript engine by RobseRob.Dk:
+		https://github.com/superrob/simple-2D-javascript-engine
+	-->
+</head>
+
+<body>
+
+<!-- Game viewport -->
+<div class='game'>
+	<div class='player' style='left:10px; top:10px;'></div>
+
+	<div class='solid wall' style=' width:250px; left:  0px; top: 50px;'>a</div>
+	<div class='solid wall' style='height:200px; left:300px; top:  0px;'>b</div>
+	<div class='solid wall' style=' width:150px; left:150px; top:150px;'>c</div>
+	<div class="solid wall" style="height:200px; left: 50px; top:100px;">d</div>
+	<div class="solid wall" style="height:200px; left:150px; top:200px;">e</div>
+	<div class="solid wall" style="height:100px; left: 50px; top:350px;">f</div>
+	<div class="solid wall" style=" width:150px; left:150px; top:450px;">g</div>
+	<div class="solid wall" style="height:200px; left:250px; top:250px;">h</div>
+	<div class="solid wall" style="height:250px; left:350px; top:250px;">i</div>
+	<div class='solid wall' style='height:250px; left:400px; top: 50px;'>j</div>
+
+	<div class='solid finish' style='width:100px; left:400px; top:450px;'></div>
+
+	<div class="coin" style="left:  50px; top: 17px;"></div>
+	<div class="coin" style="left: 100px; top: 17px;"></div>
+	<div class="coin" style="left: 150px; top: 17px;"></div>
+	<div class="coin" style="left: 200px; top: 17px;"></div>
+
+	<output class="score-box">Score: <span class="score">0</span></output>
+</div>
+
+<!-- JS -->
+<script src="app.js"></script>
+
+</body>
+</html>
