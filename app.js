@@ -67,11 +67,10 @@ var Game = function(viewportEl) {
 	t.player.el =  $(".player", viewportEl);
 
 	// Player position data:
-	var playerCS = getComputedStyle(t.player.el);
-	t.player.x = parseInt(playerCS.left, 10);
-	t.player.y = parseInt(playerCS.top, 10);
-	t.player.width  = parseInt(playerCS.width, 10);
-	t.player.height = parseInt(playerCS.height, 10);
+	t.player.x      = t.player.el.offsetLeft;
+	t.player.y      = t.player.el.offsetTop;
+	t.player.width  = t.player.el.offsetWidth;
+	t.player.height = t.player.el.offsetHeight;
 
 	// Adds a new div.tmp-move which is used to calculate whenever the player is allowed to move:
 	t.tmpMovEl = document.createElement('div');
