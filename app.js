@@ -157,25 +157,28 @@ Game.prototype.movTick = function() {
 	var moveAllowed = true;
 
 	// Check if move is inside the game area:
-	if (!this.insideGameArea(this.tmpMovEl, this.viewport.el)) moveAllowed = false;
-
-	// Solid collision:
-	this.solidEls.forEach(function(solidEl) {
-		if (this.elOverlap(this.tmpMovEl, solidEl)) moveAllowed = false; // Checks if there is any overlap on a solid object.
-	}, this);
-
-	// Coin collision:
-	this.coinEls.forEach(function(coinEl) {
-		if (this.elOverlap(this.tmpMovEl, coinEl)) {
-			this.setScore('add', 50);
-			coinEl.parentNode.removeChild(coinEl);
+	if (!this.insideGameArea(this.player)) moveAllowed = false;
+	
+	// Only detect collisions if player is inside game area:
+	else {
+		// Solid collision:
+		this.solidEls.forEach(function(solidEl) {
+			if (this.elOverlap(this.tmpMovEl, solidEl)) moveAllowed = false; // Checks if there is any overlap on a solid object.
+		}, this);
+	
+		// Coin collision:
+		this.coinEls.forEach(function(coinEl) {
+			if (this.elOverlap(this.tmpMovEl, coinEl)) {
+				this.setScore('add', 50);
+				coinEl.parentNode.removeChild(coinEl);
+			}
+		}, this);
+	
+		// Finish collision:
+		if (!this.finished && this.elOverlap(this.tmpMovEl, this.finishEl)) {
+			this.setScore('add', 250);
+			this.finished = true;
 		}
-	}, this);
-
-	// Finish collision:
-	if (!this.finished && this.elOverlap(this.tmpMovEl, this.finishEl)) {
-		this.setScore('add', 250);
-		this.finished = true;
 	}
 
 	var ps = this.player.el.style,
