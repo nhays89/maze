@@ -100,7 +100,7 @@ Game.prototype.setScore = function(method, amount) {
 
 
 // Checks if a is inside b:
-Game.prototype.insideGameArea = function(a, b) {
+Game.prototype.insideGameArea = function(a) {
 
 	// Player position:
 	var aX = a.offsetLeft;
