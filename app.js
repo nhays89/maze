@@ -99,18 +99,18 @@ Game.prototype.setScore = function(method, amount) {
 };
 
 
-// Checks if a is inside b:
-Game.prototype.insideGameArea = function(a) {
+// Checks if an element is inside its game area:
+Game.prototype.insideGameArea = function(el) {
 
-	// Player position:
-	var aX = a.offsetLeft;
-	var aY = a.offsetTop;
+	// el position:
+	var x = el.offsetLeft;
+	var y = el.offsetTop;
 
 	return !(
-		aX < 0 ||
-		aY < 0 ||
-		aX + this.player.width  > this.viewport.width ||
-		aY + this.player.height > this.viewport.height
+		x < 0 ||
+		y < 0 ||
+		x + this.player.width  > this.viewport.width ||
+		y + this.player.height > this.viewport.height
 	);
 };
 
@@ -157,7 +157,7 @@ Game.prototype.movTick = function() {
 	var moveAllowed = true;
 
 	// Check if move is inside the game area:
-	if (!this.insideGameArea(this.player)) moveAllowed = false;
+	if (!this.insideGameArea(this.player.el)) moveAllowed = false;
 	
 	// Only detect collisions if player is inside game area:
 	else {
@@ -193,7 +193,5 @@ Game.prototype.movTick = function() {
 	}
 };
 
-document.addEventListener('DomContentLoaded', function() {
-	// Create a game (All the game components are in the HTML):
-	var game = new Game($(".game"));
-});
+// Create a game (All the game components are in the HTML):
+var game = new Game($(".game"));
