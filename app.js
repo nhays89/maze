@@ -182,7 +182,7 @@ Game.prototype.movTick = function() {
 	}
 
 	var ps = this.player.el.style,
-		ts = this.tmpMovEl.style;
+		ts = this.tmpMovEl.style,
 		pCS = getComputedStyle(this.player.el);
 	if (moveAllowed) { // Move player:
 		ps.left = tCS.left;
@@ -193,6 +193,7 @@ Game.prototype.movTick = function() {
 	}
 };
 
-
-// Create a game:
-var game = new Game($(".game"));
+document.addEventListener('DomContentLoaded', function() {
+	// Create a game (All the game components are in the HTML):
+	var game = new Game($(".game"));
+});
