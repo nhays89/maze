@@ -1,3 +1,6 @@
+(function() {
+	'use strict';
+
 // Array-like object to Array:
 function toArray(o) {
 	for (var a = [], l=o.length; l--;) a[l] = o[l];
@@ -12,9 +15,6 @@ function $(s, el) {
 	return (el || document).querySelector(s);
 }
 
-// Event listening:
-Element.prototype.on = Element.prototype.addEventListener;
-
 // Which keys are pressed:
 var keys = {
 	left: false,
@@ -24,7 +24,7 @@ var keys = {
 };
 
 // Keydown listener
-document.body.on('keydown', function(e) {
+document.body.addEventListener('keydown', function(e) {
 	e = e.keyCode;
 	if (e === 37) keys.left  = true;
 	if (e === 39) keys.right = true;
@@ -33,7 +33,7 @@ document.body.on('keydown', function(e) {
 });
 
 // Keyup listener
-document.body.on('keyup', function(e) {
+document.body.addEventListener('keyup', function(e) {
 	e = e.keyCode;
 	if (e === 37) keys.left  = false;
 	if (e === 39) keys.right = false;
@@ -99,10 +99,10 @@ Game.prototype.setScore = function(method, amount) {
 };
 
 
-// Checks if an element is inside its game area:
+// Checks if an element is inside its viewport:
 Game.prototype.insideGameArea = function(el) {
 
-	// el position:
+	// element position:
 	var x = el.offsetLeft;
 	var y = el.offsetTop;
 
@@ -157,15 +157,21 @@ Game.prototype.movTick = function() {
 	var moveAllowed = true;
 
 	// Check if move is inside the game area:
-	if (!this.insideGameArea(this.player.el)) moveAllowed = false;
-	
-	// Only detect collisions if player is inside game area:
-	else {
+	if (this.insideGameArea(this.tmpMovEl)) {
+
 		// Solid collision:
 		this.solidEls.forEach(function(solidEl) {
-			if (this.elOverlap(this.tmpMovEl, solidEl)) moveAllowed = false; // Checks if there is any overlap on a solid object.
+			if (this.elOverlap(this.tmpMovEl, solidEl)) {
+				moveAllowed = false; // Checks if there is any overlap on a solid object.
+
+				// Finish collision:
+				if (!this.finished && solidEl === this.finishEl) {
+					this.setScore('add', 250);
+					this.finished = true;
+				}
+			}
 		}, this);
-	
+
 		// Coin collision:
 		this.coinEls.forEach(function(coinEl) {
 			if (this.elOverlap(this.tmpMovEl, coinEl)) {
@@ -173,12 +179,9 @@ Game.prototype.movTick = function() {
 				coinEl.parentNode.removeChild(coinEl);
 			}
 		}, this);
-	
-		// Finish collision:
-		if (!this.finished && this.elOverlap(this.tmpMovEl, this.finishEl)) {
-			this.setScore('add', 250);
-			this.finished = true;
-		}
+
+	} else {
+		moveAllowed = false;
 	}
 
 	var ps = this.player.el.style,
@@ -193,5 +196,8 @@ Game.prototype.movTick = function() {
 	}
 };
 
-// Create a game (All the game components are in the HTML):
+
+// Create a game:
 var game = new Game($(".game"));
+
+})();
