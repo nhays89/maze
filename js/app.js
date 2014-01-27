@@ -1,17 +1,3 @@
-// Array-like object to Array:
-function toArray(o) {
-	for (var a = [], l=o.length; l--;) a[l] = o[l];
-	return a;
-}
-
-// Get elements by CSS selector
-function $$(s, el) {
-	return toArray( (el || document).querySelectorAll(s) );
-}
-function $(s, el) {
-	return (el || document).querySelector(s);
-}
-
 // Get element position:
 function getOffset(el) {
 	return {
@@ -51,46 +37,43 @@ document.body.addEventListener('keyup', function(e) {
 
 // Game constructor:
 var Game = function(viewportEl) {
-	var t = this;
 	var cs = getComputedStyle(viewportEl);
 
 	// Starting values:
-	t.score = 0;
+	this.score = 0;
 	this.finished = false;
-	t.player = {};
-	t.step = 2;
+	this.player = {};
+	this.step = 2;
 
 	// Viewport element & dimensions:
-	t.viewport = {
+	this.viewport = {
 		el: viewportEl,
 		width:  parseInt(cs.width,  10),
 		height: parseInt(cs.height, 10)
 	};
 
 	// Grab necessary game elements:
-	t.solidEls  = $$('.solid',  viewportEl);
-	t.coinEls   = $$('.coin',   viewportEl);
-	t.scoreEls  = $$('.score',  viewportEl);
-	t.finishI  =  t.solidEls.indexOf($(".finish", viewportEl));
-	t.player.el =  $(".player", viewportEl);
+	this.solidEls  = qsa('.solid',  viewportEl);
+	this.coinEls   = qsa('.coin',   viewportEl);
+	this.scoreEls  = qsa('.score',  viewportEl);
+	this.finishI  =  sudo.indexOf(this.solidEls, qs(".finish", viewportEl));
+	this.player.el =  qs(".player", viewportEl);
 	
 	// Cache positions of solids:
-	t.solids = t.solidEls.map(getOffset);
+	this.solids = sudo.map(this.solidEls, getOffset);
 	
 	// Cache coin positions:
-	t.coins = t.coinEls.map(getOffset);
+	this.coins = sudo.map(this.coinEls, getOffset);
 
 	// Cache player position:
-	t.player.pos = {};
-	t.player.pos.top  = t.player.el.offsetTop;
-	t.player.pos.left = t.player.el.offsetLeft;
-	t.player.pos.bottom = t.player.pos.top + t.player.el.offsetHeight;
-	t.player.pos.right  = t.player.pos.left + t.player.el.offsetWidth;
+	this.player.pos = getOffset(this.player.el);
 
 	// Setup interval. Delay controlls tickrate:
-	setInterval(function() {
-		t.movTick();
-	}, 10);
+	this.frameRefresher = createInterval(function() {
+		this.movTick();
+	}, 10, this);
+	
+	this.frameRefresher.start();
 };
 
 
@@ -99,7 +82,7 @@ Game.prototype.setScore = function(method, amount) {
 	if (method === 'add') this.score += amount;
 	else                  this.score -= amount;
 
-	this.scoreEls.forEach(function(scoreEl) {
+	sudo.forEach(this.scoreEls, function(scoreEl) {
 		scoreEl.textContent = this.score;
 	}, this);
 };
@@ -164,7 +147,7 @@ Game.prototype.movTick = function() {
 	if (t.insideGameArea(offset)) {
 
 		// Solid collision:
-		t.solids.forEach(function(solidPos, i) {
+		sudo.forEach(t.solids, function(solidPos, i) {
 			if (this.elOverlap(offset, solidPos)) {
 				moveAllowed = false; // Checks if there is any overlap on a solid object.
 
@@ -177,7 +160,7 @@ Game.prototype.movTick = function() {
 		}, t);
 
 		// Coin collision:
-		t.coins.forEach(function(coinPos, i) {
+		sudo.forEach(t.coins, function(coinPos, i) {
 			if (this.elOverlap(offset, coinPos)) {
 				this.setScore('add', 50);
 				delete this.coins[i];
@@ -199,4 +182,4 @@ Game.prototype.movTick = function() {
 
 
 // Create a game:
-var game = new Game($(".game"));
+var game = new Game(qs(".game"));
